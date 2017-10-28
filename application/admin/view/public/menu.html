@@ -1,0 +1,34 @@
+<div class="tpl-left-nav tpl-left-nav-hover">
+    <div class="tpl-left-nav-title">
+        {$Think.config.VERSION.TITLE}
+    </div>
+    <div class="tpl-left-nav-list">
+        <li class="tpl-left-nav-item">
+            <a href="{:url('Admin/Index/index')}" class="nav-link">
+                <i class="am-icon-home"></i>
+                <span>首页</span>
+            </a>
+        </li>
+        {foreach $menu as $vo}
+        <ul class="tpl-left-nav-menu">
+            <li class="tpl-left-nav-item">
+                <a href="javascript:;" class="nav-link tpl-left-nav-link-list">
+                    <i class="{$vo.icons}"></i>
+                    <span>{$vo.name}</span>
+                    <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
+                </a>
+                <ul class="tpl-left-nav-sub-menu" {if condition="in_array($action, $vo['extra'])"} style="display: block;"{/if}>
+                    <li>
+                        {foreach $vo['child'] as $vv}
+                        <a href="{:url($vv['url'])}" {if condition="$action eq $vv.url"}class='active' {/if}>
+                            <i class="{$vv['icon']}"></i>
+                            <span>{$vv.name}</span>
+                        </a>
+                        {/foreach}
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        {/foreach}
+    </div>
+</div>

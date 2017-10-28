@@ -1,0 +1,148 @@
+<!--引入资源文件-->
+{include file="../application/admin/view/public/head.html" /}
+<link href="/static/dengxiang/css/lightbox.css" rel="stylesheet">
+<body data-type="generalComponents">
+<!--引入资源文件-->
+{include file="../application/admin/view/public/header.html" /}
+
+<div class="tpl-page-container tpl-page-header-fixed">
+<!--引入资源文件-->
+{include file="../application/admin/view/public/menu.html" /}
+
+    <div class="tpl-content-wrapper">
+        <!--引入资源文件-->
+        {include file="../application/admin/view/public/nva.html" /}
+        <div class="tpl-portlet-components">
+            <div class="portlet-title">
+                <div class="caption font-green bold">
+                    <span class="am-icon-code"></span>管理员列表
+                </div>
+            </div>
+            <div class="tpl-block">
+                <div class="am-g">
+                    <div class="am-u-sm-12 am-u-md-6">
+                        <div class="am-btn-toolbar">
+                            <div class="am-btn-group am-btn-group-xs">
+                                <button onclick="href()" type="button" class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 新增</button>
+                                <!--<button type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-save"></span> 保存</button>-->
+                                <!--<button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 审核</button>-->
+                                <!--<button type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-3">
+                        <div class="am-form-group">
+                            <select data-am-selected="{btnSize: 'sm'}">
+                                {volist name="department" id="v"}
+                                <option value="{$key}">{$v}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-3">
+                        <div class="am-input-group am-input-group-sm">
+                            <input type="text" name="condition" class="am-form-field" placeholder="请输入手机号或用户名">
+                            <span class="am-input-group-btn">
+            <button class="am-btn  am-btn-default am-btn-success tpl-am-btn-success am-icon-search" type="button"></button>
+          </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="am-g">
+                    <div class="am-u-sm-12">
+                        <form class="am-form">
+                            <table class="am-table am-table-striped am-table-hover table-main">
+                                <thead>
+                                <tr>
+                                    <th class="table-check"><input type="checkbox" class="tpl-table-fz-check"></th>
+                                    <th class="table-id">序号</th>
+                                    <th class="table-avatar">头像</th>
+                                    <th class="table-username">用户名</th>
+                                    <th class="table-department">部门</th>
+                                    <th class="table-rule">拥有角色</th>
+                                    <th class="table-phone am-hide-sm-only">手机号</th>
+                                    <th class="table-email am-hide-sm-only">邮箱</th>
+                                    <th class="table-date am-hide-sm-only">添加时间</th>
+                                    <th class="table-set">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name='list' id='v' empty="暂时没有数据"	key="k"}
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td>{$k}</td>
+                                    <td>
+                                        <a href="http://{$_SERVER['HTTP_HOST']}/{$v['avatar']}" data-lightbox="lightbox-test" data-title="用户头像">
+                                        <img width="48" height="48" src="{$v['id'] | admin_thumb_img = 48,48,'admin/user','admin_thumb_'}" alt="">
+                                        </a></td>
+                                    <td>{$v['username']}</td>
+                                    <td>{$v['depart']}</td>
+                                    <td>{$v['title']}</td>
+                                    <td>{$v['phone']}</td>
+                                    <td>{$v['email']}</td>
+                                    <td class="am-hide-sm-only">{$v['register_time']|date="Y-m-d H:i:s",###}</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button onclick='location.href="{:url('admin/User/editUser',['id'=>$v['id']])}"' type="button" class="am-btn am-btn-default"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                                                <button onclick='del("{$v.id}",this)' type="button" class="am-btn am-btn-default "><span class="am-icon-trash-o"></span> 删除</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+                            <div class="am-cf">
+                            <div class="am-fr">
+                                <ul class="am-pagination tpl-pagination">
+                                    {$page}
+                                </ul>
+                            </div>
+                            </div>
+                            <hr>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            <div class="tpl-alert"></div>
+        </div>
+    </div>
+
+</div>
+<!--引入资源文件-->
+{include file="../application/admin/view/public/footer.html" /}
+<script src="/static/dengxiang/js/lightbox.js"></script>
+</body>
+<script>
+    function href() {
+        location.href= '/admin/User/add_user';
+    }
+
+    function del(id,obj) {
+        layer.confirm('确认删除么？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax({
+                url: "{:url('admin/User/delUser')}",
+                type: 'post',
+                dataType: 'json',
+                data:{id:id},
+                success:function(res){
+                    if(res.status == 1){
+                        layer.msg(res.msg);
+                        $(obj).parent().parent().parent().parent().remove();
+                    }else{
+                        layer.msg(res.msg);
+                    }
+                }
+            });
+        })
+    }
+    function edit(id) {
+        location.href = "{:url('admin/User/editUser',['id'=>'"+id+"'])}";
+    }
+</script>
+</html>

@@ -1,0 +1,160 @@
+<!--引入资源文件-->
+{include file="../application/admin/view/public/head.html" /}
+
+<body data-type="generalComponents">
+<!--引入资源文件-->
+{include file="../application/admin/view/public/header.html" /}
+<div class="tpl-page-container tpl-page-header-fixed">
+    <!--引入资源文件-->
+    {include file="../application/admin/view/public/menu.html" /}
+    <div class="tpl-content-wrapper">
+        <!--引入资源文件-->
+        {include file="../application/admin/view/public/nva.html" /}
+        <div class="tpl-portlet-components">
+            <div class="portlet-title">
+                <div class="caption font-green bold">
+                    <span class="am-icon-code"></span> 修改
+                </div>
+            </div>
+            <div class="tpl-block">
+
+                <div class="am-g">
+                    <div class="tpl-form-body tpl-form-line">
+                        <form class="am-form tpl-form-line-form" action="" id="formid" enctype="multipart/form-data">
+                            <div class="am-form-group">
+                                <label for="rule_id" class="am-u-sm-3 am-form-label">选择角色<span class="tpl-form-line-small-title">rule</span></label>
+                                <div class="am-u-sm-9">
+                                    <select data-am-selected="{btnSize: 'sm'}" name="rule_id" id="rule_id">
+                                        <option value="">点击选择...</option>
+                                        {volist name="rule" id="v"}
+                                        <option value="{$v.id}" {if condition="$userList['group_id'] eq $v.id"}selected="selected"{/if}>{$v.title}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="department" class="am-u-sm-3 am-form-label">选择部门<span class="tpl-form-line-small-title">department</span></label>
+                                <div class="am-u-sm-9">
+                                    <select data-am-selected="{btnSize: 'sm'}" name="department" id="department">
+                                        <option value="">点击选择...</option>
+                                        {volist name="department" id="v"}
+                                        <option value="{$key}" {if condition="$userList['department'] eq $key"}selected="selected"{/if}>{$v}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="usenrame" class="am-u-sm-3 am-form-label">管理员用户名 <span class="tpl-form-line-small-title">userName</span></label>
+                                <div class="am-u-sm-9">
+                                    <input value="{$userList['username']}" type="text" id="usenrame" name="username" class="am-form-field tpl-form-no-bg" placeholder="管理员用户名" />
+                                    <small>*请填写真实姓名</small>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-form-label">手机号 <span class="tpl-form-line-small-title">phone</span></label>
+                                <div class="am-u-sm-9">
+                                    <input value="{$userList['phone']}" type="number" id="phone" name="phone" placeholder="请输入管理员手机号">
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label  class="am-u-sm-3 am-form-label">头像 <span class="tpl-form-line-small-title">avatar</span></label>
+                                <div class="am-u-sm-9">
+                                    <div class="am-form-group am-form-file">
+                                        <div class="tpl-form-file-img">
+                                            <img src="/{$userList['avatar']}" alt="" id="imglogs" >
+                                            <input  type="text" name="avatar" id="photoCover" value="{$userList['avatar']}">
+                                            <input  id="lefile"  onchange="onFileChange(event || window.event)"  type="file" style="display:none">
+                                        </div>
+                                        <button type="button" onclick="$('input[id=lefile]').click();" class="am-btn am-btn-danger am-btn-sm">
+                                            <i class="am-icon-cloud-upload"></i> 添加他头像图片</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-form-label">邮箱 <span class="tpl-form-line-small-title">email</span></label>
+                                <div class="am-u-sm-9">
+                                    <input type="email" name="email" id="email" placeholder="请输入管理员邮箱" value="{$userList['email']}">
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-form-label">密码 <span class="tpl-form-line-small-title">password</span></label>
+                                <div class="am-u-sm-9">
+                                    <input type="password" name="password" id="password" placeholder="请输入管理员密码">
+                                    <small>*为空则为不修改密码</small>
+                                </div>
+
+                            </div>
+                            <div class="am-form-group">
+                                <div class="am-u-sm-9 am-u-sm-push-3">
+                                    <input type="hidden" value="{$userList['id']}" name="id">
+                                    <button onclick="submits()" type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+</div>
+</body>
+<!--引入资源文件-->
+{include file="../application/admin/view/public/footer.html" /}
+<script>
+
+    function onFileChange(e){
+        var i,files = e.target.files;
+        for(i =0;i<files.length;i++){
+            if(!files[i].type.match('image.*')){
+                layer.msg('请选择图片格式的文件');
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = (function (){
+                return function (e) {
+                    console.log(e.target);
+                    $('#imglogs').show();
+                    $('#imglogs').attr('src',e.target.result);
+                    $('#photoCover').val(e.target.result);
+                }
+            })(files[i]);
+            reader.readAsDataURL(files[i]);
+        }
+    }
+    
+    function submits() {
+       if($('#rule_id').val()== ''){
+           layer.msg('角色不能为空');
+       }else if($('#department').val()== ''){
+            layer.msg('部门不能为空');
+        }else if($('#usenrame').val()== ''){
+           layer.msg('姓名不能为空');
+       }else if($('#phone').val()== ''){
+           layer.msg('手机号不能为空');
+       }else{
+           $.ajax({
+           	url:"{:url('admin/User/editUser')}",
+           	type: 'post',
+            data:$('#formid').serialize(),
+           	dataType: 'json',
+           	success:function(json){
+           		if(json.status == -1){
+           		    layer.msg(json.msg);
+                }else{
+                    layer.msg(json.msg);
+                    location.reload();
+                }
+           	}
+           });
+       }
+    }
+</script>
+</html>

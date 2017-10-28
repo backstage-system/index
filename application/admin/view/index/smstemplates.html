@@ -1,0 +1,130 @@
+<!--引入资源文件-->
+{include file="../application/admin/view/public/head.html" /}
+<link href="/static/dengxiang/css/lightbox.css" rel="stylesheet">
+<body data-type="generalComponents">
+<!--引入资源文件-->
+{include file="../application/admin/view/public/header.html" /}
+
+<div class="tpl-page-container tpl-page-header-fixed">
+    <!--引入资源文件-->
+    {include file="../application/admin/view/public/menu.html" /}
+
+    <div class="tpl-content-wrapper">
+        <!--引入资源文件-->
+        {include file="../application/admin/view/public/nva.html" /}
+        <div class="tpl-portlet-components">
+            <div class="portlet-title">
+                <div class="caption font-green bold">
+                    <span class="am-icon-code"></span>短信列表
+                </div>
+            </div>
+            <div class="tpl-block">
+                <div class="am-g">
+                    <div class="am-u-sm-12 am-u-md-6">
+                        <div class="am-btn-toolbar">
+                            <div class="am-btn-group am-btn-group-xs">
+                                <button onclick="href()" type="button" class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 新增</button>
+                                <!--<button type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-save"></span> 保存</button>-->
+                                <!--<button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 审核</button>-->
+                                <!--<button type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>-->
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="am-g">
+                    <div class="am-u-sm-12">
+                        <form class="am-form">
+                            <table class="am-table am-table-striped am-table-hover table-main">
+                                <thead>
+                                <tr>
+                                    <th class="table-id">序号</th>
+                                    <th class="table-avatar">应用场景</th>
+                                    <th class="table-username">短信签名</th>
+                                    <th class="table-department">短信模板</th>
+                                    <th class="table-rule">发送短信的内容</th>
+                                    <th class="table-email am-hide-sm-only">添加时间</th>
+                                    <th class="table-set">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name='list' id='v' empty="暂时没有数据"	key="k"}
+                                <tr>
+                                    <td>{$k}</td>
+                                    <td>
+                                        {switch name="v.send_scene"}
+                                        {case value="1"}用户注册{/case}
+                                        {case value="2"}用户找回密码{/case}
+                                        {case value="3"}审核用户充值积分{/case}
+                                        {case value="4"}积分充值订单提交{/case}
+                                        {case value="5"}用户提现验证码{/case}
+                                        {case value="6"}用户提现成功通知{/case}
+                                        {/switch}
+                                    </td>
+                                    <td>{$v['sms_sign']}</td>
+                                    <td>{$v['sms_tpl_code']}</td>
+                                    <td>{$v['tpl_content']}</td>
+                                    <td>{$v.add_time|date='Y-m-d H:i',###}</td>
+                                    <td>
+                                        <button onclick='location.href="{:url('admin/Index/editSms',['id'=>$v['tpl_id']])}"' type="button" class="am-btn am-btn-default am-btn-xs"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                                        <button onclick='del("{$v.tpl_id}",this)' type="button" class="am-btn am-btn-default am-btn-xs"><span class="am-icon-trash-o"></span> 删除</button>
+                                    </td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+                            <div class="am-cf">
+                                <div class="am-fr">
+                                    <ul class="am-pagination tpl-pagination">
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <hr>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            <div class="tpl-alert"></div>
+        </div>
+    </div>
+
+</div>
+<!--引入资源文件-->
+{include file="../application/admin/view/public/footer.html" /}
+<script src="/static/dengxiang/js/lightbox.js"></script>
+<script>
+    function href() {
+        location.href = "{:url('Admin/Index/addSmsTemplate')}";
+    }
+
+    function del(id,obj) {
+        layer.confirm('确认删除么？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            var index = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+            $.ajax({
+                url: "{:url('admin/Index/delSms')}",
+                type: 'post',
+                data:{
+                    id:id
+                },
+                dataType: 'json',
+                success:function(data){
+                    if(data.status == 1){
+                        layer.msg(data.msg);
+                        layer.close(index);
+                        $(obj).parent().parent().remove();
+                    }
+                }
+            });
+        });
+    }
+</script>
+</body>
+</html>

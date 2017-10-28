@@ -1,0 +1,77 @@
+<!--引入资源文件-->
+{include file="../application/admin/view/public/head.html" /}
+
+<body data-type="generalComponents">
+<!--引入资源文件-->
+{include file="../application/admin/view/public/header.html" /}
+<div class="tpl-page-container tpl-page-header-fixed">
+    <!--引入资源文件-->
+    {include file="../application/admin/view/public/menu.html" /}
+    <div class="tpl-content-wrapper">
+        <!--引入资源文件-->
+        {include file="../application/admin/view/public/nva.html" /}
+        <div class="tpl-portlet-components">
+            <div class="portlet-title">
+                <div class="caption font-green bold">
+                    <span class="am-icon-code">添加角色</span>
+                </div>
+
+            </div>
+            <div class="tpl-block">
+
+                <div class="am-g">
+                    <div class="tpl-form-body tpl-form-line">
+                        <form class="am-form tpl-form-line-form" action="" id="formid" enctype="multipart/form-data">
+
+                            <div class="am-form-group">
+                                <label for="rule_name" class="am-u-sm-3 am-form-label">角色名 <span class="tpl-form-line-small-title">ruleName</span></label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" id="rule_name" name="title" class="am-form-field tpl-form-no-bg" placeholder="角色名" />
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <div class="am-u-sm-9 am-u-sm-push-3">
+                                    <button onclick="submits()" type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+</div>
+</body>
+<!--引入资源文件-->
+{include file="../application/admin/view/public/footer.html" /}
+<script>
+
+
+
+    function submits() {
+        if($('#rule_name').val()== ''){
+            layer.msg('权限名不能为空');
+        }else{
+            $.ajax({
+                url:"{:url('admin/Rule/add_group')}",
+                type: 'post',
+                data:$('#formid').serialize(),
+                dataType: 'json',
+                success:function(json){
+                    if(json.status == -1){
+                        layer.msg(json.msg);
+                    }else{
+                        layer.msg(json.msg);
+                        setTimeout('location.reload()',1000);
+                    }
+                }
+            });
+        }
+    }
+</script>
+</html>

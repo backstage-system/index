@@ -1,0 +1,133 @@
+<!--引入资源文件-->
+{include file="../application/admin/view/public/head.html" /}
+<link href="/static/dengxiang/css/lightbox.css" rel="stylesheet">
+<body data-type="generalComponents">
+<!--引入资源文件-->
+{include file="../application/admin/view/public/header.html" /}
+
+<div class="tpl-page-container tpl-page-header-fixed">
+    <!--引入资源文件-->
+    {include file="../application/admin/view/public/menu.html" /}
+
+    <div class="tpl-content-wrapper">
+        <!--引入资源文件-->
+        {include file="../application/admin/view/public/nva.html" /}
+        <div class="tpl-portlet-components">
+            <div class="portlet-title">
+                <div class="caption font-green bold">
+                    <span class="am-icon-code"></span> 分配权限
+                </div>
+            </div>
+            <div class="tpl-block">
+                <div class="am-g">
+                    <div class="am-u-sm-12">
+                        <div class="manage-record">
+                            <h6 class="margin-big-top"></h6>
+                            <div class="clearfix">
+                                <b>
+                                    当前角色:<span style="color:red">{$group_data['title']}</span>
+                                </b>
+                            </div>
+                            <div class="table-margin">
+                                <form action="" method="post">
+                                    <input type="hidden" name="id" value="{$group_data['id']}">
+                                    <table class="table table-striped table-bordered table-hover table-condensed">
+                                        {foreach name="rule_data" id="v"}
+                                        {empty name="v['_data']"}
+                                        <tr class="b-group">
+                                            <th width="10%">
+                                                <label>
+                                                    {$v['title']}
+                                                    <input type="checkbox" name="rule_ids[]" value="{$v['id']}" {if condition="in_array($v['id'],$group_data['rules'])"}    checked="checked"{/if} onclick="checkAll(this)" >
+                                                </label>
+                                            </th>
+                                            <td></td>
+                                        </tr>
+                                        {else /}
+                                        <tr class="b-group">
+                                            <th width="10%">
+                                                <label>
+                                                    {$v['title']} <input type="checkbox" name="rule_ids[]" value="{$v['id']}" {if condition="in_array($v['id'],$group_data['rules'])"}  checked="checked"{/if} onclick="checkAll(this)">
+                                                </label>
+                                            </th>
+                                            <td class="b-child">
+                                                {foreach name="v['_data']" id="n"}
+                                                <table class="table table-striped table-bordered table-hover table-condensed">
+                                                    <tr class="b-group">
+                                                        <th width="10%">
+                                                            <label>
+                                                                {$n['title']} <input type="checkbox" name="rule_ids[]" value="{$n['id']}" {if condition="in_array($n['id'],$group_data['rules'])"}  checked="checked"{/if} onclick="checkAll(this)">
+                                                            </label>
+                                                        </th>
+                                                        <td>
+                                                            {notempty name="n['_data']"}
+                                                            {volist name="n['_data']" id="c"}
+                                                            <label>
+                                                                &emsp;{$c['title']} <input type="checkbox" name="rule_ids[]" value="{$c['id']}" {if condition="in_array($c['id'],$group_data['rules'])"}    checked="checked"{/if} >
+                                                            </label>
+                                                            {/volist}
+                                                            {/notempty}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                {/foreach}
+                                            </td>
+                                        </tr>
+                                        {/empty}
+                                        {/foreach}
+                                        <tr>
+                                            <td colspan="2" style="text-align: center;">
+                                                <button   type="submit" class="btn btn-default btn-sm">
+                                                    <span class="glyphicon glyphicon-plus"></span> 提交
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--引入资源文件-->
+{include file="../application/admin/view/public/footer.html" /}
+<script src="/static/dengxiang/js/lightbox.js"></script>
+</body>
+<script>
+    function href() {
+        location.href= '/admin/Rule/add_group';
+    }
+
+    function del(id,obj) {
+        layer.confirm('确认删除么？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax({
+                url: "{:url('admin/Rule/delete_group')}",
+                type: 'post',
+                dataType: 'json',
+                data:{id:id},
+                success:function(res){
+                    if(res.status == 1){
+                        layer.msg(res.msg);
+                        setTimeout('location.reload()',1000);
+                    }else{
+                        layer.msg(res.msg);
+                    }
+                }
+            });
+        })
+    }
+    function edit(id) {
+        location.href = "{:url('admin/User/editUser',['id'=>'"+id+"'])}";
+    }
+
+    function checkAll(obj){
+        $(obj).parents('.b-group').eq(0).find("input[type='checkbox']").prop('checked', $(obj).prop('checked'));
+    }
+</script>
+</html>

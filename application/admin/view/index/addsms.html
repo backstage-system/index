@@ -1,0 +1,131 @@
+<!--引入资源文件-->
+{include file="../application/admin/view/public/head.html" /}
+
+<body data-type="generalComponents">
+<!--引入资源文件-->
+{include file="../application/admin/view/public/header.html" /}
+<div class="tpl-page-container tpl-page-header-fixed">
+    <!--引入资源文件-->
+    {include file="../application/admin/view/public/menu.html" /}
+    <div class="tpl-content-wrapper">
+        <!--引入资源文件-->
+        {include file="../application/admin/view/public/nva.html" /}
+        <div class="tpl-portlet-components">
+            <div class="portlet-title">
+                <div class="caption font-green bold">
+                    <span class="am-icon-code">添加短信模板</span>
+                </div>
+
+            </div>
+            <div class="tpl-block">
+
+                <div class="am-g">
+                    <div class="tpl-form-body tpl-form-line">
+                        <form class="am-form tpl-form-line-form" action="" id="formid" enctype="multipart/form-data">
+                            <div class="am-form-group">
+                                <label for="sms_sign" class="am-u-sm-3 am-form-label">短信签名<span class="tpl-form-line-small-title"></span></label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" id="sms_sign" name="sms_sign" class="am-form-field tpl-form-no-bg" placeholder="短信签名" />
+                                    <small class="sms_sign" onmouseover="$('.sms_sign').css('color','red')" onmouseout="$('.sms_sign').css('color','#32c5d5')" style="color:#32c5d5">务必填写阿里云申请的短信签名和模板ID</small>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-form-label">短信模板ID <span class="tpl-form-line-small-title"></span></label>
+                                <div class="am-u-sm-9">
+                                    <input type="text" id="sms_tpl_code" name="sms_tpl_code" placeholder="短信模板ID">
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label for="rule_id" class="am-u-sm-3 am-form-label">发送场景<span class="tpl-form-line-small-title"></span></label>
+                                <div class="am-u-sm-9">
+                                    <select data-am-selected="{btnSize: 'sm'}" name="send_scene" id="rule_id" onchange="getSmstemplate(this.options[this.options.selectedIndex].value)">
+                                        <option value="">请选择...</option>
+                                        {volist name="send" id="v"}
+                                        <option value="{$v.send_scene}">{$v.sms}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-form-label">短信内容 <span class="tpl-form-line-small-title">password</span></label>
+                                <div class="am-u-sm-9">
+                                    <textarea type="text"  name="tpl_content"  rows="5" id="smssend">选择发送场景内容自动显示</textarea>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <div class="am-u-sm-9 am-u-sm-push-3">
+                                    <button onclick="submits()" type="button" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+</div>
+</body>
+<!--引入资源文件-->
+{include file="../application/admin/view/public/footer.html" /}
+<script>
+    function submits() {
+        if($('#sms_sign').val()== ''){
+            layer.msg('短信签名不能为空');
+        }else if($('#sms_tpl_code').val()== ''){
+            layer.msg('短信模板ID不能为空');
+        }else if($('#rule_id').val()== ''){
+            layer.msg('发送场景不能为空');
+        }else{
+            var index = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+            $.ajax({
+                url:"{:url('admin/Index/addSmsTemplate')}",
+                type: 'post',
+                data:$('#formid').serialize(),
+                dataType: 'json',
+                success:function(json){
+                    if(json.status == -1){
+                        layer.msg(json.msg);
+                        layer.close(index);
+                        location.href('');
+                    }else{
+                        layer.msg(json.msg);
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+
+    function getSmstemplate(value) {
+        var index = layer.load(1, {
+            shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
+        $.ajax({
+            url: "{:url('admin/Index/getOption')}",
+            type: 'post',
+            data:{
+                id:value
+            },
+            dataType: 'json',
+            success:function(data){
+                if(data.status == 1){
+                    layer.close(index);
+                    $('#smssend').text(data.data);
+                    $('#smssend').attr("readonly",'readonly');
+                }
+            }
+        });
+
+    }
+</script>
+</html>
